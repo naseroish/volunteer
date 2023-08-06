@@ -1,0 +1,68 @@
+<!-- app.component.html -->
+
+<!-- navbar -->
+<mat-toolbar color="primary" class="fixed-navbar">
+    <mat-toolbar-row>
+        <span >
+            <button class="profile" *ngIf="isAuthenticated | async" mat-icon-button [matMenuTriggerFor]="profileMenu">
+              <mat-icon>person</mat-icon>
+            </button>
+            <mat-menu #profileMenu="matMenu">
+              <button mat-menu-item routerLink="/profile">الملف الشخصي</button>
+              <button mat-menu-item (click)="logout()">تسجيل الخروج</button>
+            </mat-menu>
+          </span>
+      <button *ngIf="isAuthenticated | async" mat-icon-button class="toggler" (click)="toggleSidenav()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="spacer"></span>
+      <span class="logo">
+        <img src="../assets/logo5.png" alt="تطوعي">
+      </span>
+      <span class="spacer"></span>
+
+    </mat-toolbar-row>
+  </mat-toolbar>
+  
+  
+  
+
+<!-- sidenav -->
+<ng-container *ngIf="isAuthenticated | async; else loginTemplate">
+    <mat-sidenav-container class="sidenav-container">
+        <mat-sidenav [(opened)]="opened" #sidenav mode="side" position="end" *ngIf="isAuthenticated | async"
+            class="sidenav">
+            <mat-nav-list dir="rtl" class="sidenav-list">
+                <a mat-list-item routerLink="/home" routerLinkActive="active">الرئيسية</a>
+                <a mat-list-item routerLink="/teams" routerLinkActive="active">المجموعات</a>
+                <a mat-list-item routerLink="/members" routerLinkActive="active">الطلاب</a>
+                <a mat-list-item routerLink="/reports" routerLinkActive="active">التقارير</a>
+                <div class="spacer"></div>
+                <div class="sidenav-footer">
+                    <a mat-list-item routerLink="/profile" routerLinkActive="active">الملف الشخصي</a>
+                    <a mat-list-item routerLink="/logout" (click)="logout()">تسجيل الخروج</a>
+                </div>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content class="sidenav-content" *ngIf="isAuthenticated | async">
+            <div class="main-content">
+                <div *ngIf="loadingService.isLoading$ | async" class="loader-overlay">
+                    <app-loader></app-loader>
+                  </div>
+                <router-outlet></router-outlet>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</ng-container>
+
+
+<!-- withoutsidenav -->
+<ng-template #loginTemplate>
+    <div class="main-content">
+        <div *ngIf="loadingService.isLoading$ | async" class="loader-overlay">
+            <app-loader></app-loader>
+          </div>
+        <router-outlet></router-outlet>
+    </div>
+</ng-template>
